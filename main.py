@@ -77,6 +77,21 @@ class KeywordQueryEventListener(EventListener):
             return get_next(extension)
         if kw_id == KEYWORD_CURRENT:
             return get_current(extension)
+        entry ="not a valid keyword" + str(kw_id)
+        item = ExtensionResultItem(icon='images/email_icon.svg',
+                                             name='%s' % entry,
+                                             description='%s' % entry,
+                                             on_enter=CopyToClipboardAction(entry))
+
+        return RenderResultListAction([item])
+
+    def get_keyword_id(self, preferences: dict, keyword: str):
+        kw_id = None
+        for key, value in preferences.items():
+            if value == keyword:
+                kw_id = key
+                break
+        return kw_id
 
 if __name__ == '__main__':
     DummyMailExtension().run()
