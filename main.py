@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Set up a cache that expires after 1 hour (3600 seconds)
-cache = SimpleCache('cache.pkl', duration=2*3600)
+cache = SimpleCache('cache.pkl', duration=24*3600*365)
 KEYWORD_NEXT = "kw_next"
 KEYWORD_CURRENT = "kw_current"
 class InvalidCacheException(Exception):
