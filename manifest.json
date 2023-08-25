@@ -1,0 +1,40 @@
+{
+    "required_api_version": "1",
+    "name": "Dummy mail aliases",
+    "description": "Generate aliases with a predefined base for testing",
+    "developer_name": "Thomas Lys",
+    "icon": "images/email_icon.svg",
+    "options": {
+        "query_debounce": 0.1
+    },
+    "preferences": [
+        {
+            "id": "dummy_mail_kw",
+            "type": "keyword",
+            "name": "Dummy Mail Aliases",
+            "description": "Generate new alias",
+            "default_value": "dmn"
+        },
+        {
+            "id": "dummymail_base",
+            "type": "input",
+            "name": "Base",
+            "description": "Dummy mail base. E.g email in <email>+ext@domain.tld",
+            "default_value": "email"
+        },
+        {
+            "id": "dummymail_ext",
+            "type": "input",
+            "name": "Extension",
+            "description": "Dummy mail extension. E.g ext n email+<ext>@domain.tld",
+            "default_value": "ext"
+        },
+        {
+            "id": "dummymail_domain",
+            "type": "input",
+            "name": "Domain",
+            "description": "Dummy mail domain. E.g domain.tld n email+ext@<domain.tld>",
+            "default_value": "domain.tld"
+        }
+    ]
+}
