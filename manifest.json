@@ -1,5 +1,5 @@
 {
-    "required_api_version": "1",
+    "required_api_version": "^2.0.0",
     "name": "Dummy mail aliases",
     "description": "Generate aliases with a predefined base for testing",
     "developer_name": "Thomas Lys",
