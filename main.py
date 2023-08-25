@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 # Set up a cache that expires after 1 hour (3600 seconds)
 cache = SimpleCache('cache.pkl', duration=2*3600)
+KEYWORD_NEXT = "kw_next"
+KEYWORD_CURRENT = "kw_current"
 class InvalidCacheException(Exception):
     pass
 
@@ -32,32 +34,49 @@ class DummyMailExtension(Extension):
         super().__init__()
         self.subscribe(KeywordQueryEvent, KeywordQueryEventListener())
 
-
-class KeywordQueryEventListener(EventListener):
-
-    def on_event(self, event, extension):
-        # get next
+def get_current_alias(extension):
         cached_data = cache.load()
         entry = None
         if cached_data:
             entry = cached_data
         else:
             entry = str(extension.preferences['dummymail_base']) + '+' + str(extension.preferences['dummymail_ext']) + '0@' + str(extension.preferences['dummymail_domain'])
+        return entry
 
-        new_entry = None
-        try:
-            new_entry = increment_dummy(entry, extension)
-        except InvalidCacheException:
-            logging.error('error trying to increment alias')
-            new_entry = entry = str(extension.preferences['dummymail_base']) + '+' + str(extension.preferences['dummymail_ext']) + '0@' + str(extension.preferences['dummymail_domain'])
+def get_current(extension):
+    entry = get_current_alias(extension)
+    item = ExtensionResultItem(icon='images/email_icon.svg',
+                                   name='%s' % entry,
+                                   description='%s' % entry,
+                                   on_enter=CopyToClipboardAction(entry))
 
-        cache.save(new_entry)
-        item = ExtensionResultItem(icon='images/email_icon.svg',
+    return RenderResultListAction([item])
+
+def get_next(extension):
+    entry = get_current_alias(extension)
+    new_entry = None
+    try:
+        new_entry = increment_dummy(entry, extension)
+    except InvalidCacheException:
+        logging.error('error trying to increment alias')
+        new_entry = entry = str(extension.preferences['dummymail_base']) + '+' + str(extension.preferences['dummymail_ext']) + '0@' + str(extension.preferences['dummymail_domain'])
+
+    cache.save(new_entry)
+    item = ExtensionResultItem(icon='images/email_icon.svg',
                                              name='%s' % new_entry,
                                              description='%s' % new_entry,
                                              on_enter=CopyToClipboardAction(new_entry))
 
-        return RenderResultListAction([item])
+    return RenderResultListAction([item])
+
+class KeywordQueryEventListener(EventListener):
+
+    def on_event(self, event, extension):
+        kw_id = self.get_keyword_id(extension.preferences, event.get_keyword())
+        if kw_id == KEYWORD_NEXT:
+            return get_next(extension)
+        if kw_id == KEYWORD_CURRENT:
+            return get_current(extension)
 
 if __name__ == '__main__':
     DummyMailExtension().run()

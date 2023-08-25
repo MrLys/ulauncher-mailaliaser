@@ -9,11 +9,18 @@
     },
     "preferences": [
         {
-            "id": "dummy_mail_kw",
+            "id": "kw_next",
             "type": "keyword",
             "name": "Dummy Mail Aliases",
             "description": "Generate new alias",
             "default_value": "dmn"
+        },
+        {
+            "id": "kw_current",
+            "type": "keyword",
+            "name": "Dummy Mail Aliases",
+            "description": "Get current alias",
+            "default_value": "dmc"
         },
         {
             "id": "dummymail_base",
